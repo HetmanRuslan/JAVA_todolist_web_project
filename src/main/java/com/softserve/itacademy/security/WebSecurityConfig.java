@@ -24,15 +24,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                     .authorizeRequests()
-                    .antMatchers("/login","/users/create").permitAll()
+                    .antMatchers("/login-form","/users/create").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
-                    .loginPage("/login")
+                    .loginPage("/login-form")
                     .permitAll()
                 .and()
                     .logout()
                     .permitAll();
+        http.exceptionHandling().authenticationEntryPoint(
+                (request, response, authException) -> response.sendRedirect(request.getContextPath() + "/login-form"));
     }
 
     @Override
