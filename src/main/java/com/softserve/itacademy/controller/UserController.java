@@ -1,8 +1,11 @@
 package com.softserve.itacademy.controller;
 
 import com.softserve.itacademy.model.User;
+import com.softserve.itacademy.security.PasswordConfig;
 import com.softserve.itacademy.service.RoleService;
 import com.softserve.itacademy.service.UserService;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -15,30 +18,37 @@ public class UserController {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final PasswordConfig passwordConfig;
 
-    public UserController(UserService userService, RoleService roleService) {
+    public UserController(PasswordConfig passwordConfig, UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordConfig = passwordConfig;
     }
 
     @GetMapping("/create")
+    @PreAuthorize("!hasAuthority('USER')")
     public String create(Model model) {
         model.addAttribute("user", new User());
         return "create-user";
     }
 
     @PostMapping("/create")
+    @PostAuthorize("!hasAuthority('USER')")
     public String create(@Validated @ModelAttribute("user") User user, BindingResult result) {
         if (result.hasErrors()) {
             return "create-user";
         }
-        user.setPassword(user.getPassword());
+        String crypto = passwordConfig.passwordEncoder().encode(user.getPassword());
+        user.setPassword(crypto);
+        //user.setPassword(user.getPassword());
         user.setRole(roleService.readById(2));
         User newUser = userService.create(user);
         return "redirect:/todos/all/users/" + newUser.getId();
     }
 
     @GetMapping("/{id}/read")
+    @PreAuthorize("hasAuthority('ADMIN') or #id == authentication.principal.id")
     public String read(@PathVariable long id, Model model) {
         User user = userService.readById(id);
         model.addAttribute("user", user);
@@ -67,18 +77,21 @@ public class UserController {
         } else {
             user.setRole(roleService.readById(roleId));
         }
+        String crypto = passwordConfig.passwordEncoder().encode(user.getPassword());
+        oldUser.setPassword(crypto);
         userService.update(user);
         return "redirect:/users/" + id + "/read";
     }
 
-
     @GetMapping("/{id}/delete")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String delete(@PathVariable("id") long id) {
         userService.delete(id);
         return "redirect:/users/all";
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public String getAll(Model model) {
         model.addAttribute("users", userService.getAll());
         return "users-list";

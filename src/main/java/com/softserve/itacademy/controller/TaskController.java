@@ -81,5 +81,4 @@ public class TaskController {
     public String delete(@PathVariable("task_id") long taskId, @PathVariable("todo_id") long todoId) {
         taskService.delete(taskId);
         return "redirect:/todos/" + todoId + "/tasks";
-    }
-}
+    }}
