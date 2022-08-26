@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -33,7 +33,9 @@
                     <a th:href="@{|/users/${user.id}/update|}">Edit</a>
                 </td>
                 <td>
+                    <div sec:authorize="hasAuthority('ADMIN') or #authentication.principal.id == #vars.todo.owner.id">
                     <a th:href="@{|/users/${user.id}/delete|}">Remove</a>
+                    </div>
                 </td>
             </tr>
         </table>

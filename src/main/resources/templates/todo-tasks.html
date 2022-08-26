@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml" lang="en">
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
@@ -12,7 +12,9 @@
 
     <form class="form-horizontal" th:action="@{|/tasks/create/todos/${todo.id}|}" method="get">
         <div align="right">
+            <div sec:authorize="hasAuthority('ADMIN') or #authentication.principal.id == #vars.todo.owner.id">
             <input class="btn-info btn-lg" type="submit" value="Create Task">
+            </div>
         </div>
     </form>
 
@@ -26,7 +28,9 @@
             <th>Name</th>
             <th>Priority</th>
             <th>State</th>
+            <div sec:authorize="hasAuthority('ADMIN') or #authentication.principal.id == #vars.todo.owner.id">
             <th colspan="2">Operations</th>
+            </div>
         </tr>
         <tr th:each="task, iStat: ${tasks}">
             <td th:text="${iStat.index + 1}"/>
@@ -34,26 +38,33 @@
             <td th:text="${task.name}"/>
             <td th:text="${task.priority.name().substring(0, 1) + task.priority.name().substring(1).toLowerCase()}"/>
             <td th:text="${task.state.name}"/>
-            <td>
+            <td><div sec:authorize="hasAuthority('ADMIN') or #authentication.principal.id == #vars.todo.owner.id">
                 <a th:href="@{|/tasks/${task.id}/update/todos/${todo.id}|}">Edit</a>
+            </div>
             </td>
             <td>
+                <div sec:authorize="hasAuthority('ADMIN') or #authentication.principal.id == #vars.todo.owner.id">
                 <a th:href="@{|/tasks/${task.id}/delete/todos/${todo.id}|}">Remove</a>
+                </div>
             </td>
         </tr>
     </table>
     <br>
     <h3>Collaborators:</h3>
+    <div sec:authorize="hasAuthority('ADMIN') or #authentication.principal.id == #vars.todo.owner.id">
     <span>
         <form class="form-horizontal" th:action="@{/todos/{id}/add(id = ${todo.id})}" method="get">
-            <select class="form-control" name="user_id" id="users">
+            <select class="form-control" name="user_id" id="users" style="margin-bottom: 8px;">
                 <option>Select collaborator...</option>
                 <option th:each="user : ${users}" th:value="${user.id}"
                         th:text="${user.firstName + ' ' + user.lastName}"></option>
             </select>
+            <div sec:authorize="hasAuthority('ADMIN') or #authentication.principal.id == #vars.todo.owner.id">
             <input align="right" class="btn btn" type="submit" value="Add">
+            </div>
         </form>
     </span>
+    </div>
     <br>
     <table class="table">
         <tr th:each="collaborator, iStat: ${todo.collaborators}">
@@ -63,7 +74,9 @@
                    th:text="${collaborator.firstName + ' ' + collaborator.lastName}"/>
             </td>
             <td>
+                <div sec:authorize="hasAuthority('ADMIN') or #authentication.principal.id == #vars.todo.owner.id">
                 <a th:href="@{/todos/{id}/remove(id = ${todo.id}, user_id = ${collaborator.id})}">Remove</a>
+                </div>
             </td>
         </tr>
     </table>

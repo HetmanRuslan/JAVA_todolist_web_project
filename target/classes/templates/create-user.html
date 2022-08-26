@@ -4,32 +4,41 @@
     <meta charset="UTF-8">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
     <title>New User registration</title>
+    <style>
+        hr {
+            display: block;
+            height: 1px;
+            border: 0;
+            border-top: 1px solid #ccc;
+            margin: 1em 0;
+            width: 454px;
+        }
+    </style>
 </head>
 <body>
-<div th:replace="header"></div>
-<div class="col-md-offset-2">
-    <h2>Create New User</h2>
+<div class="col-md-offset-2" style="margin-top: 72px; margin-left: 384px; margin-bottom: 48px;">
+    <h2 style="font-size: 38px;">Create New User</h2>
 </div>
-<form class="form-horizontal" th:action="@{/users/create}" th:object="${user}" method="post">
+<form class="form-horizontal" th:action="@{/users/create}" th:object="${user}" method="post" style="margin-left: 384px;">
     <div class="form-group">
-        <label class="col-sm-2 control-label" for="first-name">First name:</label>
-        <div class="col-sm-8">
+        <label class="col-sm-2 control-label" for="first-name" style="font-size: 18px; font-weight: normal; text-align: left; width: 124px;">First name:</label>
+        <div class="col-sm-8" style="width: 358px;">
             <input type="text" class="form-control" th:field="*{firstName}" id="first-name"/>
             <small class="form-text text-muted" th:if="${#fields.hasErrors('firstName')}"
                    th:errors="*{firstName}"></small>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label" for="last-name">Last name:</label>
-        <div class="col-sm-8">
+        <label class="col-sm-2 control-label" for="last-name" style="font-size: 18px; font-weight: normal; text-align: left; width: 124px;">Last name:</label>
+        <div class="col-sm-8" style="width: 358px;">
             <input type="text" class="form-control" th:field="*{lastName}" id="last-name"/>
             <small class="form-text text-muted" th:if="${#fields.hasErrors('lastName')}"
                    th:errors="*{lastName}"></small>
         </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label" for="last-name">Password:</label>
-        <div class="col-sm-8">
+        <label class="col-sm-2 control-label" for="last-name" style="font-size: 18px; font-weight: normal; text-align: left; width: 124px;">Password:</label>
+        <div class="col-sm-8" style="width: 358px;">
             <input type="password" class="form-control" th:field="*{password}" id="password"/>
             <small class="form-text text-muted" th:if="${#fields.hasErrors('password')}"
                    th:errors="*{password}"></small>
@@ -37,15 +46,21 @@
     </div>
     </div>
     <div class="form-group">
-        <label class="col-sm-2 control-label" for="email">E-mail:</label>
-        <div class="col-sm-8">
+        <label class="col-sm-2 control-label" for="email" style="font-size: 18px; font-weight: normal; text-align: left; width: 124px;">E-mail:</label>
+        <div class="col-sm-8" style="width: 358px;">
             <input type="email" class="form-control" th:field="*{email}" id="email"/>
             <small class="form-text text-muted" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></small>
         </div>
     </div>
-    <div>
+    <div style="margin-left: 312px; margin-top: 24px; margin-bottom: 24px;">
         <input type="submit" class="btn btn-info" value="Register"/>
         <input type="reset" class="btn btn" value="Clear"/>
+    </div>
+    <hr/>
+    <div>
+        <p style="font-size: 16px; margin-left: 80px;">You already have an account?
+            <a th:href="@{/login-form}">Login Now!</a>
+        </p>
     </div>
 </form>
 </body>
