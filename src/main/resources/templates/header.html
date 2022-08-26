@@ -1,14 +1,25 @@
-<div xmlns:th="http://www.thymeleaf.org">
-    <nav class="navbar navbar-default">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" th:href="@{/}">TODOs List</a>
+<nav class="navbar navbar-default" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" th:href="@{/}">Home Page</a>
+            <a class="navbar-brand" sec:authorize="isAuthenticated()"  th:href="${'/todos/all/users/' + #httpServletRequest.getUserPrincipal().principal.id}">My TODOs List</a>
+            <a class="navbar-brand" sec:authorize="hasAuthority('ADMIN')"  th:href="${'/users/all'}">All Users</a>
+
+            <div style="position: absolute; right: 10px"
+                 sec:authorize="isAuthenticated()">
+                <span class="navbar-brand" >Hello
+                    <a th:href="${'/users/' + #httpServletRequest.getUserPrincipal().principal.id + '/read'}"
+                       th:inline="text"
+                    >[[${#httpServletRequest.getUserPrincipal().principal.firstName}]]!</a>
+                </span>
+                <a class="navbar-brand" th:href="${'/logout'}">LogOut</a>
+            </div>
+            <div style="position: absolute; right: 10px"
+                 sec:authorize="!isAuthenticated()">
+                <a class="navbar-brand" th:href="${'/login-form'}">Log in</a>
             </div>
 
-                <form th:action="@{/logout}" method="post">
-                    <input type="submit" value="Sign Out"/>
-                </form>
 
         </div>
-    </nav>
-</div>
+    </div>
+</nav>
