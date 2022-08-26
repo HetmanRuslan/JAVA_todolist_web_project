@@ -86,7 +86,7 @@ public class ToDoController {
     }
 
     @GetMapping("/{todo_id}/delete/users/{owner_id}")
-    @PreAuthorize("#ownerId == authentication.principal.id")
+    @PreAuthorize("hasAuthority('ADMIN') or #ownerId == authentication.principal.id")
     public String delete(@PathVariable("todo_id") long todoId, @PathVariable("owner_id") long ownerId) {
         todoService.delete(todoId);
         return "redirect:/todos/all/users/" + ownerId;
