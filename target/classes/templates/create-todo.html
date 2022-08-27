@@ -13,17 +13,17 @@
 <form class="form-horizontal" th:object="${todo}" method="post">
     <div class="form-group">
         <label class="col-sm-2 control-label" for="title">Title:</label>
-        <div class="col-sm-8">
+        <div class="col-sm-8" style="width: 558px;">
             <input class="form-control" type="text" th:field="*{title}" id="title"/>
             <small class="form-text text-muted" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></small>
         </div>
     </div>
-    <div class="col-sm-offset-2 col-sm-8">
+    <div class="col-sm-offset-2 col-sm-8"; style="margin-left: 244px;">
         <input class="btn btn-info" type="submit" value="Create"/>
         <input class="btn btn" type="reset" value="Clear"/>
     </div>
 </form>
-<div class="col-sm-offset-2 col-sm-8">
+<div class="col-sm-offset-2 col-sm-8"; style="margin-left: 244px; margin-top: 12px;">
     <a th:href="@{|/todos/all/users/${ownerId}|}">Go to To-Do List</a>
 </div>
 </body>

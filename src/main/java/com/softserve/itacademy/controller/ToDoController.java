@@ -17,6 +17,8 @@ import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 @Controller
 @RequestMapping("/todos")
@@ -73,17 +75,11 @@ public class ToDoController {
     }
 
     @GetMapping("/{todo_id}/update/users/{owner_id}")
-    public String update(@PathVariable("todo_id") long todoId, @PathVariable("owner_id") long ownerId, Model model, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName());
-        if (userService.readById(ownerId).getEmail().equals(principal.getName()) || user.getRole().getName().equals("ADMIN")) {
-            ToDo todo = todoService.readById(todoId);
-            model.addAttribute("todo", todo);
-            return "update-todo";
-        }
-        return "redirect:/access-denied";
+
     }
 
     @PostMapping("/{todo_id}/update/users/{owner_id}")
+    @PostAuthorize("hasAuthority('ADMIN') or #ownerId == authentication.principal.id")
     public String update(@PathVariable("todo_id") long todoId, @PathVariable("owner_id") long ownerId,
                          @Validated @ModelAttribute("todo") ToDo todo, BindingResult result) {
         if (result.hasErrors()) {
@@ -98,14 +94,6 @@ public class ToDoController {
     }
 
     @GetMapping("/{todo_id}/delete/users/{owner_id}")
-    public String delete(@PathVariable("todo_id") long todoId, @PathVariable("owner_id") long ownerId, Principal principal) {
-        User user = userRepository.findByEmail(principal.getName());
-        if (userService.readById(ownerId).getEmail().equals(principal.getName()) || user.getRole().getName().equals("ADMIN")) {
-            todoService.delete(todoId);
-            return "redirect:/todos/all/users/" + ownerId;
-        }
-        return "redirect:/access-denied";
-    }
 
     @GetMapping("/all/users/{user_id}")
     public String getAll(@PathVariable("user_id") long userId, Model model, Principal principal) {
